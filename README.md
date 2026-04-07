@@ -1,229 +1,154 @@
-# 📊 Analytics Hub Deck Generator — Copilot Cowork Edition
+# AI-in-One Analytics Advisor — Copilot Cowork Custom Skill
 
-> Turn your Power BI Analytics Hub reports into polished executive presentations — using Copilot Cowork.
-
-This repo is the **Copilot Cowork** counterpart to [`analytics-hub-deck`](https://github.com/Fepilot/analytics-hub-deck) (the GitHub Copilot / Claude Code version). It solves the core limitation that makes the original workflow fail in Cowork.
+> A custom Cowork skill that turns your AI-in-One Dashboard Power BI export into a polished executive deck — zero scripts, zero installs.
 
 ---
 
-## Why the PDF Approach Fails in Cowork
+## What is a Cowork Custom Skill?
 
-If you've tried attaching a Power BI PDF directly to Cowork, you likely hit this:
+[Copilot Cowork](https://learn.microsoft.com/en-us/microsoft-365/copilot/cowork/) (Microsoft 365 Frontier) supports **custom skills**: Markdown files you place in your OneDrive that give Cowork a specialized persona, domain knowledge, and workflow. Cowork discovers and loads them automatically at the start of each conversation.
 
-> *"I can see the file exists, but I can only read the first page / can't extract its contents."*
+You can create up to 20 custom skills. Each skill lives at:
 
-**Root cause:** Power BI PDF exports are **rasterized** — every page is a screenshot image baked into the PDF with no text layer. When Cowork's PDF skill processes it, it receives limited visual context from the model (often just page 1). There's no way to programmatically loop through all pages the way GitHub Copilot can via `temp/page_*.png`.
+```
+OneDrive/Documents/Cowork/Skills/<folder-name>/SKILL.md
+```
 
-Additionally, Cowork **cannot run Python scripts**, so the original `convert.py --prepare` workflow doesn't apply.
-
-**The fix:** Pre-extract the PDF once locally using `prepare.py`, then feed all individual PNG images directly to Cowork. Cowork handles images natively and processes them all.
+This repo contains the **AI-in-One Analytics Advisor** skill — a Senior Copilot Analytics Advisor persona specialized in the [AI-in-One Dashboard](https://github.com/microsoft/AI-in-One-Dashboard).
 
 ---
 
-## Architecture Comparison
+## What This Skill Does
 
-| | GitHub Copilot / Claude Code | **Copilot Cowork** |
-|---|---|---|
-| PDF processing | `python convert.py --prepare` (local) | `python prepare.py` (local) |
-| Image delivery | AI reads `temp/page_*.png` from filesystem | User drags PNGs into Cowork chat |
-| Analysis | AI writes `temp/insights.json` | Cowork analyzes images directly |
-| PPTX generation | `python convert.py --build` | Cowork's native PowerPoint skill |
-| Instructions | `INSTRUCTIONS.md` (repo root) | `SKILL.md` (OneDrive) |
-| Execution environment | Local terminal | Microsoft 365 cloud |
+When activated, Cowork becomes a **Senior Microsoft Copilot Analytics Advisor** and will:
 
----
-
-## Setup (One Time)
-
-### 1. Clone this repo
-
-```bash
-git clone https://github.com/Fepilot/analytics-hub-cowork.git
-cd analytics-hub-cowork
-```
-
-### 2. Install Poppler (required for PDF extraction)
-
-Poppler is the PDF rendering library used by `pdf2image`.
-
-**Windows:**
-1. Download the latest release from: https://github.com/oschwartz10612/poppler-windows/releases/
-2. Extract to `C:\poppler\`
-3. Add `C:\poppler\Library\bin` to your `PATH`
-
-**Mac:**
-```bash
-brew install poppler
-```
-
-**Linux:**
-```bash
-sudo apt install poppler-utils
-```
-
-### 3. Install the Cowork custom skill
-
-This is what teaches Cowork how to create the decks.
-
-1. Open your OneDrive
-2. Navigate to `Documents` → create a folder `Cowork` → inside it create `Skills` → inside it create `analytics-hub-deck`
-3. Full path: `OneDrive/Documents/Cowork/Skills/analytics-hub-deck/`
-4. Copy `SKILL.md` from this repo into that folder
-
-Cowork will **automatically discover and load** this skill at the start of every conversation.
+- Analyze all 13 pages of your AI-in-One Dashboard export
+- Interpret every metric against benchmark bands (Excellent / Healthy / Below Potential / Concerning)
+- Diagnose your organization's adoption pattern (Wide but Shallow, Deep but Narrow, Agent Early Stage, etc.)
+- Build a **17-slide executive deck** using Cowork's native PowerPoint skill
+- Automatically fetch Microsoft's official AI-in-One Interpretation Guide, Frontier Firm Playbook, and Work Trend Index via Deep Research
+- Save the final deck directly to your OneDrive
 
 ---
 
-## Usage (Per Report)
+## Installation (One-time, ~2 minutes)
 
-### Step 1 — Put your PDF in the uploads/ folder
+1. Open your **OneDrive** in the browser
+2. Navigate to **Documents**
+3. Create this exact folder path: `Cowork/Skills/analytics-hub-deck/`
+4. Download [`SKILL.md`](SKILL.md) from this repo
+5. Upload it to: `Documents/Cowork/Skills/analytics-hub-deck/SKILL.md`
 
-Export your Power BI report as a PDF:
-- **Power BI Desktop:** `File → Export → Export to PDF`
-- **Power BI Service:** `File → Export → PDF`
+That's it. Cowork discovers it automatically at the start of your next conversation.
 
-Drop it in the `uploads/` folder.
-
-### Step 2 — Run the prep script
-
-```bash
-python prepare.py uploads/your-report.pdf
-```
-
-This extracts every PDF page as a PNG image into `temp/your-report/`.
-
-```
-temp/
-└── your-report/
-    ├── page_1.png
-    ├── page_2.png
-    ├── page_3.png
-    └── ...
-```
-
-The script prints exactly what to do next.
-
-**Optional — create a ZIP too:**
-```bash
-python prepare.py uploads/your-report.pdf --zip
-```
-
-### Step 3 — Open Copilot Cowork
-
-Go to https://m365.cloud.microsoft/ → Select **Cowork**
-
-### Step 4 — Attach your images and type your prompt
-
-**Option A (Easiest):** Drag ALL PNG files from `temp/your-report/` into the Cowork chat, then type:
-
-> Create an executive deck for my AI-in-One Copilot report. I've attached all 12 dashboard images.
-
-**Option B (OneDrive):** Upload the `temp/your-report/` folder to your OneDrive, then tell Cowork:
-
-> Create an executive deck from my AI-in-One Copilot report. The dashboard images are in my OneDrive at Documents/CoworkAssets/your-report/
-
-### Step 5 — Cowork builds your deck
-
-Your custom SKILL.md is loaded automatically. Cowork will:
-1. Confirm it sees all N images
-2. Tell you which page it's analyzing as it goes
-3. Synthesize insights across all pages
-4. Use its PowerPoint skill to create the PPTX
-5. Save the result to your OneDrive Cowork output folder
+> **Tip:** The folder name (`analytics-hub-deck`) can be anything — Cowork identifies the skill by the `name:` field inside SKILL.md.
 
 ---
 
-## Prompt Reference
+## Customer Workflow (Zero-Code)
 
-| Deck type | Prompt |
+### Step 1 — Export from Power BI
+
+In **Power BI Service**: File → Export → **PowerPoint** → Download the `.pptx`
+
+### Step 2 — Convert to PNG images
+
+Open the downloaded `.pptx` in **PowerPoint**:
+
+**File → Export → Change File Type → PNG Portable Network Graphics → Save As**
+
+PowerPoint asks *"Every Slide?"* → click **Every Slide**
+
+This creates a folder with `Slide1.png`, `Slide2.png`, ... — one image per dashboard page.
+
+> **Alternative:** File → Save As → change file type to PNG → Save → Every Slide
+
+### Step 3 — Analyze in Cowork
+
+1. Go to [m365.cloud.microsoft](https://m365.cloud.microsoft) → open **Cowork**
+2. Start a **new conversation** from the Cowork home page
+3. Drag **all** the PNG files into the chat
+4. Send:
+
+   > *"Analyze my AI-in-One dashboard and create an executive deck"*
+
+Cowork activates the skill, analyzes every slide in order, and builds a 17-slide PowerPoint saved to your OneDrive.
+
+---
+
+## ⚠️ Important: Start in the Right Place
+
+Custom skills **only activate in free-form Cowork conversations** — not inside built-in Task templates.
+
+| Where to start | Works? |
 |---|---|
-| Executive deck, auto-detect | `Create an executive deck for my Copilot report. [N] images attached.` |
-| Analyst guide | `Create an analyst guide for my Super Usage Adoption report. All [N] pages attached.` |
-| Specific audience | `Create an exec deck for our CISO from my AI-in-One report. [N] images attached.` |
-| Focused analysis | `Build an executive deck focused on agent adoption. AI-in-One dashboard, [N] images attached.` |
-| Post to Teams | `Create the deck and post a 3-bullet summary to our #ai-adoption Teams channel.` |
+| Cowork home page → new conversation ("What should we tackle next?") | ✅ |
+| `Cowork > Tasks > [any built-in task]` | ❌ Skills are ignored inside Tasks |
 
 ---
 
-## Supported Reports
+## What the Skill Covers
 
-| Report | Coverage |
+### Metrics (with full benchmark bands)
+
+| Metric | What it measures |
 |---|---|
-| 🤖 AI-in-One Dashboard | M365 Copilot + Chat + Agents all-in-one |
-| ⚡ Super Usage Adoption | Habit formation and super user journey |
-| 🏆 Super User Impact | ROI and productivity measurement |
-| 💬 Chat & Agent Intelligence | Session patterns and agent depth |
-| 🐙 GitHub Copilot Impact | Developer analytics |
-| 📊 M365 Copilot Readiness | License readiness scoring |
+| M365 Copilot Active Rate | % of licensed users who used Copilot in the last 28 days |
+| Super User % | % of actives meeting the 5+ apps AND 50+ interactions threshold |
+| Agent Adoption % | % of users who interacted with at least one Copilot Agent |
+| Unlicensed Chat Users | Users accessing free Copilot Chat (conversion candidates) |
+| MoM Growth | Month-over-month change — leading indicator of momentum |
+| License Utilization | % of purchased licenses actively generating value |
+| Agent Diversity | Average agents per user — signals multi-workflow integration |
+| M365 App Diversity | Average Copilot apps per user — predicts renewal intent |
+
+### Adoption Patterns Diagnosed
+
+1. **Wide but Shallow** — High activation, low depth
+2. **Deep but Narrow** — Strong power users, low reach
+3. **Agent Early Stage** — Solid M365 base, untapped agent opportunity
+4. **License Waste** — Utilization < 60%, financial risk
+5. **Balanced Frontier** — All signals healthy, time to scale
+
+### Output Deck (17 slides, Executive Mode)
+
+Cover → TOC → Executive Summary → Adoption Landscape → M365 Trends → Department Leaderboard → Super Users → Agent Adoption → Agent Leaderboard → Agent Insights → Unlicensed Chat Opportunity → Cross-Platform Patterns → Adoption Pattern Diagnosis → License Health → Strategic Recommendations → 30/60/90 Roadmap → Closing
 
 ---
 
-## Output
+## Requirements
 
-Cowork produces a PowerPoint saved to your OneDrive Cowork folder.
-
-**Executive mode:** 15–20 slides  
-- Cover with top 6 KPIs
-- Strategic insights per dashboard section
-- Cross-platform analysis
-- 5 data-backed recommendations
-- Closing with call to action
-
-**Analyst mode:** 25–35 slides  
-- Everything above + methodology, deep-dives, benchmarks, action planning template
-
----
-
-## Cowork vs GitHub Copilot — When to Use Which
-
-| Scenario | Use |
-|---|---|
-| You want to run this in VS Code from your terminal | [analytics-hub-deck](https://github.com/Fepilot/analytics-hub-deck) |
-| You want Cowork to build the deck AND email/post results | **this repo** |
-| You want to schedule a recurring monthly deck | **this repo** (Cowork scheduled prompts) |
-| You're setting this up for non-technical users | **this repo** |
-
----
-
-## File Structure
-
-```
-analytics-hub-cowork/
-├── README.md               ← This file
-├── SKILL.md                ← Copy to OneDrive/Documents/Cowork/Skills/analytics-hub-deck/
-├── prepare.py              ← Run locally to extract PDF → PNG images
-├── requirements.txt
-├── uploads/                ← Drop your PDF here
-├── temp/                   ← Auto-created by prepare.py (gitignored)
-└── reports/
-    ├── ai-in-one/GUIDE.md         ← Optional: reference guides per report type
-    ├── super-usage-adoption/GUIDE.md
-    ├── super-user-impact/GUIDE.md
-    ├── chat-agent-intelligence/GUIDE.md
-    ├── github-copilot-impact/GUIDE.md
-    └── m365-readiness/GUIDE.md
-```
-
----
-
-## Known Cowork Limitations (as of April 2026)
-
-- **No local file access** — Cowork can only read from OneDrive/SharePoint; it cannot access your local disk.
-- **No script execution** — Cowork cannot run Python. That's why `prepare.py` must run locally.
-- **PDF visual extraction is partial** — Power BI PDFs are image-only; the PDF skill can read some pages but not all. Always use extracted PNGs.
-- **200 MB file size limit** — Large reports with many high-resolution pages may exceed this. The default 150 DPI in `prepare.py` keeps files small; use `--dpi 100` if needed.
-- **Encrypted PDFs cannot be read** — Cowork cannot open encrypted files even with valid permissions.
+- Microsoft 365 Copilot license
+- Cowork access via the [Frontier program](https://adoption.microsoft.com/en-us/copilot/frontier-program/)
+- Power BI Service access to export the AI-in-One Dashboard
 
 ---
 
 ## Related Resources
 
-- [Microsoft Analytics Hub](https://github.com/microsoft/Analytics-Hub)
-- [AI-in-One Dashboard](https://github.com/microsoft/AI-in-One-Dashboard)
-- [Original analytics-hub-deck (GitHub Copilot version)](https://github.com/Fepilot/analytics-hub-deck)
-- [Copilot Cowork documentation](https://learn.microsoft.com/en-us/microsoft-365/copilot/cowork/)
-- [Copilot Cowork custom skills](https://learn.microsoft.com/en-us/microsoft-365/copilot/cowork/use-cowork#create-custom-skills)
+| Resource | URL |
+|---|---|
+| AI-in-One Dashboard (official) | https://github.com/microsoft/AI-in-One-Dashboard |
+| Cowork documentation | https://learn.microsoft.com/en-us/microsoft-365/copilot/cowork/ |
+| Frontier Firm Playbook | https://adoption.microsoft.com/files/copilot/FrontierFirmPlaybook.pdf |
+| Copilot Adoption Hub | https://adoption.microsoft.com/en-us/copilot/ |
+| Work Trend Index | https://www.microsoft.com/en-us/worklab/work-trend-index |
 
 ---
 
-MIT License — Free to use within your organization.
+## Why the Direct PDF Approach Fails in Cowork
+
+If you tried attaching a Power BI PDF directly to Cowork, you likely saw:
+
+> *"I can see the file exists, but I can only read the first page."*
+
+**Root cause:** Power BI PDF exports are **fully rasterized** — every page is a screenshot baked into the PDF with no text layer. Cowork's PDF skill receives limited visual context (often only page 1). Cowork also cannot run Python scripts.
+
+**The fix:** Use the zero-code PNG export path described above. PowerPoint converts every slide to a separate PNG in seconds — no installs required.
+
+---
+
+
+---
+
+MIT License — Free to use and share within your organization.
