@@ -46,22 +46,22 @@ Start a **new conversation** from the Cowork home page.
 Drag **all** the PNG files into the chat, then send:
 
 ```
-Read the instructions at https://raw.githubusercontent.com/Fepilot/analytics-hub-cowork/main/INSTRUCTIONS.md
-and the accuracy rules at https://raw.githubusercontent.com/Fepilot/analytics-hub-cowork/main/DASHBOARD_READING_RULES.md
+Read the instructions at https://fepilot.github.io/analytics-hub-cowork/INSTRUCTIONS.md
+and the accuracy rules at https://fepilot.github.io/analytics-hub-cowork/DASHBOARD_READING_RULES.md
 Then analyze my AI-in-One dashboard images and create an executive deck.
 I've attached all [N] slides.
 ```
 
-> **Why raw URLs?** Cowork's web fetch cannot render GitHub's JavaScript UI. The `raw.githubusercontent.com` links return plain text that Cowork reads directly.
+> **Why these URLs?** Cowork's web fetch cannot render GitHub's JavaScript UI (`github.com`). These GitHub Pages links serve plain text that Cowork reads directly.
 
 ### Prompt Variations
 
 | What you want | Prompt |
 |---|---|
-| **Executive deck** (default, 17 slides) | `Read https://raw.githubusercontent.com/Fepilot/analytics-hub-cowork/main/INSTRUCTIONS.md and https://raw.githubusercontent.com/Fepilot/analytics-hub-cowork/main/DASHBOARD_READING_RULES.md — create an executive deck from my attached AI-in-One dashboard images.` |
-| **Analyst guide** (25+ slides, deep dives) | `Read https://raw.githubusercontent.com/Fepilot/analytics-hub-cowork/main/INSTRUCTIONS.md and https://raw.githubusercontent.com/Fepilot/analytics-hub-cowork/main/DASHBOARD_READING_RULES.md — create an analyst guide from my attached AI-in-One dashboard images.` |
-| **For a specific audience** | `Read https://raw.githubusercontent.com/Fepilot/analytics-hub-cowork/main/INSTRUCTIONS.md — create an executive deck for our CIO from my AI-in-One dashboard. [N] images attached.` |
-| **Department-level focus** | `Read https://raw.githubusercontent.com/Fepilot/analytics-hub-cowork/main/INSTRUCTIONS.md — create a department-level analysis deck from my AI-in-One dashboard images. Focus on the bottom 5 and top 5 teams.` |
+| **Executive deck** (default, 17 slides) | `Read https://fepilot.github.io/analytics-hub-cowork/INSTRUCTIONS.md and https://fepilot.github.io/analytics-hub-cowork/DASHBOARD_READING_RULES.md — create an executive deck from my attached AI-in-One dashboard images.` |
+| **Analyst guide** (25+ slides, deep dives) | `Read https://fepilot.github.io/analytics-hub-cowork/INSTRUCTIONS.md and https://fepilot.github.io/analytics-hub-cowork/DASHBOARD_READING_RULES.md — create an analyst guide from my attached AI-in-One dashboard images.` |
+| **For a specific audience** | `Read https://fepilot.github.io/analytics-hub-cowork/INSTRUCTIONS.md — create an executive deck for our CIO from my AI-in-One dashboard. [N] images attached.` |
+| **Department-level focus** | `Read https://fepilot.github.io/analytics-hub-cowork/INSTRUCTIONS.md — create a department-level analysis deck from my AI-in-One dashboard images. Focus on the bottom 5 and top 5 teams.` |
 
 ---
 

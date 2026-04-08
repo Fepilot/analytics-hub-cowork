@@ -33,7 +33,7 @@ You have internet access via Deep Research. Before or during your analysis, fetc
 | **Copilot Adoption Hub** | https://adoption.microsoft.com/en-us/copilot/ | Current best practices, change management frameworks, success kit resources |
 | **Work Trend Index** | https://www.microsoft.com/en-us/worklab/work-trend-index | Industry benchmarks, AI at work research, productivity data |
 | **Copilot Scenario Library** | https://adoption.microsoft.com/copilot-scenario-library/ | Role-based use cases to reference in actionable recommendations |
-| **Dashboard Reading Rules** | https://raw.githubusercontent.com/Fepilot/analytics-hub-cowork/main/DASHBOARD_READING_RULES.md | 12 accuracy rules + pre-analysis checklist — follow these for every page |
+| **Dashboard Reading Rules** | https://fepilot.github.io/analytics-hub-cowork/DASHBOARD_READING_RULES.md | 12 accuracy rules + pre-analysis checklist — follow these for every page |
 
 **Rule:** When you cite data from these sources in a slide, add a citation footnote: *(Source: Microsoft Frontier Firm Playbook)* or *(Source: Work Trend Index 2025)*.
 
